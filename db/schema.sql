@@ -19,7 +19,7 @@ create table groups(
     id SERIAL PRIMARY KEY,
     name TEXT UNIQUE NOT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW()
-),
+);
 
 CREATE TABLE friends(
        id SERIAL PRIMARY KEY,
@@ -53,7 +53,7 @@ create table items(
 create table users_items(
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    item_id INTEGER NOT NULL REFERENCES itemss(id) ON DELETE CASCADE,
+    item_id INTEGER NOT NULL REFERENCES items(id) ON DELETE CASCADE,
     paid BOOLEAN NOT NULL,
     UNIQUE (user_id, item_id)
 )

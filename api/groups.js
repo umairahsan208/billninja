@@ -2,20 +2,18 @@ import express from "express";
 const router = express.Router();
 export default router;
 
-import requireBody from "../middleware/requireBody";
-import { getUserByPhone } from "../db/queries/users";
+import requireBody from "../middleware/requireBody.js";
+import { getUserByPhone } from "../db/queries/users.js";
 import {
   getGroupsByUserId,
   getGroupById,
   createGroup,
   deleteGroup,
-} from "../db/queries/groups";
+} from "../db/queries/groups.js";
 import {
   createGroupUser,
   getGroupUserByUserId,
-} from "../db/queries/groups_users";
-
-router.use(requireUser);
+} from "../db/queries/groups_users.js";
 
 router
   .route("/")
@@ -26,7 +24,7 @@ router
   .post(requireBody(["name", "groupUsers"]), async (req, res) => {
     const { name, groupUsers } = req.body;
     try {
-      const group = await createGroup(name);
+      const group = await createGroup(name, groupUsers);
       await createGroupUser(group.id, req.user.id);
       for (const phone of groupUsers) {
         const user = await getUserByPhone(phone);
@@ -50,12 +48,8 @@ router.param("id", async (req, res, next, id) => {
 router
   .route("/:id")
   .get(async (req, res) => {
-    try {
-      const members = await getGroupUserByUserId(req.group.id);
-      res.send({ members });
-    } catch (error) {
-      console.error(error);
-    }
+    const members = await getGroupUserByUserId(req.group.id);
+    res.send({ members });
   })
   .delete(async (req, res) => {
     try {
