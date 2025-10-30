@@ -5,37 +5,58 @@ export default router;
 import requireUser from "../middleware/requireUser.js";
 import requireBody from "../middleware/requireBody.js";
 
-import { getItems, createItems, deleteItem } from "../db/queries/items.js";
 import {
-  createUserItem,
-  payUserItem,
-  checkUserOwed,
-} from "../db/queries/users_items.js";
+  getItemsByGroupId,
+  getItemById,
+  createItems,
+  deleteItem,
+} from "../db/queries/items.js";
+import { createUserItem, payUserItem } from "../db/queries/users_items.js";
 
 router.use(requireUser);
 
 router
   .route("/")
   .get(async (req, res) => {
-    const itemss = await getItemsByBillId(req.group.id);
-    res.send(bills);
+    const items = await getItemsByGroupId(req.group.id);
+    res.send(items);
   })
   .post(
-    requireBody(["name", "cost", "bill_id", "payer_user_id", "user_names"]),
+    requireBody(["name", "cost", "groupId", "payerUserId", "owers"]),
     async (req, res) => {
-      const { name, cost, bill_id, payer_user_id, user_names } = req.body;
-      const payer = await getUserByName(payer_user_id);
-      const users = [];
-      for (const user_name of User_names) {
-        const user = await getUserByName(user_name);
-        if (!user) return res.status(404).send("User not fount");
-        user.push(user);
+      const { name, cost, groupId, payerUserId, owers } = req.body;
+      try {
+        const groupUsers = await getGroupUserByUserId(req.group.id);
+        const item = await createItems({ name, cost, groupId, payerUserId });
+        for (const userId of owers) {
+          await createUserItem(userId, item.id);
+        }
+        res.status(201).send(item);
+      } catch (error) {
+        console.error(error);
       }
-
-      const item = await createItems(name, cost, bill_id, payer.id);
-      for (const user of users) {
-        await createUserItem(user.id, item.id, false);
-      }
-      res.send(item);
     }
   );
+
+router.param("id", async (req, res, next, id) => {
+  const item = await getItemById(id);
+  if (!item) return res.status(404).send("Item not found.");
+  req.item = item;
+  next();
+});
+
+router.route("/:id").delete(async (req, res) => {
+  try {
+    await deleteItem(req.item.id);
+    res.status(204).send();
+  } catch (error) {}
+});
+
+router.put("/:id/pay", async (req, res) => {
+  try {
+    await payUserItem(req.user.id, req.item.id);
+    res.status(200).send("Item Payed");
+  } catch (error) {
+    console.error(error);
+  }
+});

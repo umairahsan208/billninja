@@ -7,7 +7,7 @@ import { getUserByPhone } from "../db/queries/users.js";
 import {
   getGroupsByUserId,
   getGroupById,
-  createGroup,
+  createGroupAndAddAsUser,
   deleteGroup,
 } from "../db/queries/groups.js";
 import {
@@ -24,8 +24,7 @@ router
   .post(requireBody(["name", "groupUsers"]), async (req, res) => {
     const { name, groupUsers } = req.body;
     try {
-      const group = await createGroup(name, groupUsers);
-      await createGroupUser(group.id, req.user.id);
+      const group = await createGroupAndAddAsUser(name, req.user.id);
       for (const phone of groupUsers) {
         const user = await getUserByPhone(phone);
         if (user) {
