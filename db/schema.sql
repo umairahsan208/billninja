@@ -8,11 +8,12 @@ DROP TABLE IF EXISTS users_items;
 
 create table users(
     id SERIAL PRIMARY KEY,
-    phone TEXT UNIQUE NOT NULL,
+    phone TEXT NOT NULL,
     password TEXT NOT NULL,
     first_name TEXT NOT NULL,
     last_name TEXT NOT NULL,
-    created_at TIMESTAMPTZ DEFAULT NOW()
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(phone)
 );
 
 create table groups(
@@ -21,7 +22,7 @@ create table groups(
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE TABLE friends(
+create table friends(
        id SERIAL PRIMARY KEY,
        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
        friend_id INTEGER NOT NULL  REFERENCES users(id) ON DELETE CASCADE,
@@ -56,4 +57,4 @@ create table users_items(
     item_id INTEGER NOT NULL REFERENCES items(id) ON DELETE CASCADE,
     paid BOOLEAN NOT NULL,
     UNIQUE (user_id, item_id)
-)
+);
