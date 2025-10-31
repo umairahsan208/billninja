@@ -30,7 +30,6 @@ export async function getGroups() {
   return groups;
 }
 
-
 // Get group members by group id
 export async function getGroupById(id) {
   const sql = `SELECT id, name, created_at FROM groups WHERE id = $1`;
