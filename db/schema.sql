@@ -14,6 +14,8 @@ create table users(
     last_name TEXT NOT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     UNIQUE(phone)
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(phone)
 );
 
 create table groups(
@@ -21,7 +23,9 @@ create table groups(
     name TEXT UNIQUE NOT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
+);
 
+create table friends(
 create table friends(
        id SERIAL PRIMARY KEY,
        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -36,18 +40,12 @@ create table groups_users(
         UNIQUE (group_id, user_id)
 );
 
--- create table bills(
---     id SERIAL PRIMARY KEY,
---     name TEXT,
---     total_cost DECIMAL (10, 2),
---     group_id INTEGER NOT NULL REFERENCES groups(id) ON DELETE CASCADE
--- );
--- create table bills(
---     id SERIAL PRIMARY KEY,
---     name TEXT,
---     total_cost DECIMAL (10, 2),
---     group_id INTEGER NOT NULL REFERENCES groups(id) ON DELETE CASCADE
--- );
+create table bills(
+    id SERIAL PRIMARY KEY,
+    name TEXT,
+    total_cost DECIMAL (10, 2),
+    group_id INTEGER NOT NULL REFERENCES groups(id) ON DELETE CASCADE
+);
 
 create table items(
     id SERIAL PRIMARY KEY,
@@ -61,6 +59,6 @@ create table users_items(
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     item_id INTEGER NOT NULL REFERENCES itemss(id) ON DELETE CASCADE,
-    paid BOOLEAN DEFAULT FALSE,
+    paid BOOLEAN NOT NULL,
     UNIQUE (user_id, item_id)
 );
