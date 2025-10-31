@@ -36,18 +36,18 @@ create table groups_users(
         UNIQUE (group_id, user_id)
 );
 
-create table bills(
-    id SERIAL PRIMARY KEY,
-    name TEXT,
-    total_cost DECIMAL (10, 2),
-    group_id INTEGER NOT NULL REFERENCES groups(id) ON DELETE CASCADE
-);
+-- create table bills(
+--     id SERIAL PRIMARY KEY,
+--     name TEXT,
+--     total_cost DECIMAL (10, 2),
+--     group_id INTEGER NOT NULL REFERENCES groups(id) ON DELETE CASCADE
+-- );
 
 create table items(
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
-    cost INTEGER NOT NULL,
-    bill_id INTEGER NOT NULL REFERENCES bills(id) ON DELETE CASCADE,
+    cost DECIMAL (10, 2) NOT NULL,
+    group_id INTEGER NOT NULL REFERENCES groups(id) ON DELETE CASCADE,
     payer_user_id INTEGER NOT NULL REFERENCES users(id)
 );
 

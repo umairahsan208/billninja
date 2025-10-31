@@ -28,7 +28,7 @@ export async function getUserById(id) {
 }
 
 //Get user by phone
-export async function getUserById(id) {
+export async function getUserByPhone(id) {
   const sql = `SELECT id, phone, password FROM users WHERE phone = $1`;
   const {
     rows: [user],
@@ -58,4 +58,3 @@ export async function deleteUserById(id) {
   } = await db.query(sql, [id]);
   return user;
 }
-

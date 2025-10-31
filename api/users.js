@@ -7,11 +7,11 @@ import {
   getUserByPhoneAndPassword,
   deleteUser,
   getUserByPhone,
-} from "../db/queries/users";
-import { getFriendsByUserId, createFriend } from "../db/queries/friends";
-import requireBody from "../middleware/requireBody";
-import requireUser from "../middleware/requireUser";
-import { createToken } from "../middleware/jwt";
+} from "../db/queries/users.js";
+import { getFriendsByUserId, createFriend } from "../db/queries/friends.js";
+import requireBody from "../middleware/requireBody.js";
+import requireUser from "../middleware/requireUser.js";
+import { createToken } from "../middleware/jwt.js";
 
 router
   .route("/register")
@@ -37,8 +37,12 @@ router
   });
 
 router.route("/deleteAccount").delete(requireUser, async (req, res) => {
-  await deleteUser(req.user.id);
-  res.status(204);
+  try {
+    await deleteUser(req.user.id);
+    res.status(204).send();
+  } catch (error) {
+    console.error(error);
+  }
 });
 
 router
@@ -54,7 +58,7 @@ router
 
     try {
       await createFriend(req.user.id, friend.id);
-      res.status(201);
+      res.status(201).send(friend);
     } catch (error) {
       console.error(error);
       res.status(500).send("Internal server error");
