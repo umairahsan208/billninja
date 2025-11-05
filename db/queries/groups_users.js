@@ -1,6 +1,6 @@
 import db from "#db/client";
 
-// Create a new group and add user as member
+// Create a new group user
 export async function createGroupAndAddAsUser(name, userId) {
   const insertGroup = `
   INSERT INTO groups (name)
@@ -23,32 +23,7 @@ export async function createGroupAndAddAsUser(name, userId) {
   return group;
 }
 
-// get all groups
-export async function getGroups() {
-  const sql = `SELECT id, name, created_at FROM groups`;
-  const { rows: groups } = await db.query(sql);
-  return groups;
-}
-
-// Get group members by group id
-export async function getGroupById(id) {
-  const sql = `SELECT id, name, created_at FROM groups WHERE id = $1`;
-  const {
-    rows: [group],
-  } = await db.query(sql, [id]);
-  return group;
-}
-
-// Delete group by id
-export async function deleteGroup(id) {
-  const sql = `DELETE FROM groups WHERE id = $1 RETURNING id, name, created_at`;
-  const {
-    rows: [group],
-  } = await db.query(sql, [id]);
-  return group;
-}
-
-// Get all groups for a user
+// Get all group users for a user
 export async function getGroupsByUserId(userId) {
   const sql = `
   SELECT groups.id, groups.name, groups.created_at
