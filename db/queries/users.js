@@ -12,15 +12,22 @@ export async function createUser(phone, password, first_name, last_name) {
     ($1, $2, $3, $4)
   RETURNING id, phone
   `;
-  const {
-    rows: [user],
-  } = await db.query(sql, [phone, hashedPassword, first_name, last_name]);
-  return user;
+  try {
+    const {
+      rows: [user],
+    } = await db.query(sql, [phone, hashedPassword, first_name, last_name]);
+    return rows[0];
+  } catch (error) {
+    console.error("DB error in createduser:", error);
+    throw error;
+  }
+  // console.log("createUser result", user);
+  // return user;
 }
 
 //Get user by id
 export async function getUserById(id) {
-  const sql = `SELECT id, phone, password FROM users WHERE id = $1`;
+  const sql = `SELECT id, phone, first_name, last_name FROM users WHERE id = $1`;
   const {
     rows: [user],
   } = await db.query(sql, [id]);
@@ -28,11 +35,11 @@ export async function getUserById(id) {
 }
 
 //Get user by phone
-export async function getUserByPhone(id) {
-  const sql = `SELECT id, phone, password FROM users WHERE phone = $1`;
+export async function getUserByPhone(phone) {
+  const sql = `SELECT id, phone, first_name, last_name FROM users WHERE phone = $1`;
   const {
     rows: [user],
-  } = await db.query(sql, [id]);
+  } = await db.query(sql, [phone]);
   return user;
 }
 

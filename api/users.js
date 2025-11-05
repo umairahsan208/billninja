@@ -18,11 +18,20 @@ router
   .post(
     requireBody(["phone", "password", "first_name", "last_name"]),
     async (req, res) => {
+      console.log("req.body:", req.body);
       const { phone, password, first_name, last_name } = req.body;
-      const user = await createUser(phone, password, first_name, last_name);
+      try {
+        const user = await createUser(phone, password, first_name, last_name);
 
-      const token = createToken({ id: user.id });
-      res.status(201).send(token);
+        const token = createToken({ id: user.id });
+        res.status(201).send({ token });
+      } catch (error) {
+        console.error("Error Creating User", error);
+        if (error.code === "23505") {
+          return res.status(409).send("Phone number already registered");
+        }
+        res.status(500).send("Internal server error");
+      }
     }
   );
 
@@ -32,8 +41,8 @@ router
     const { phone, password } = req.body;
     const user = await getUserByPhoneAndPassword(phone, password);
     if (!user) return res.status(401).send("Invalid number or password.");
-    const token = { id: user.id };
-    res.send(token);
+    const token = createToken({ id: user.id });
+    res.send({ token });
   });
 
 router.route("/deleteAccount").delete(requireUser, async (req, res) => {
@@ -42,6 +51,7 @@ router.route("/deleteAccount").delete(requireUser, async (req, res) => {
     res.status(204).send();
   } catch (error) {
     console.error(error);
+    res.status(500).send("Internal server error");
   }
 });
 

@@ -1,25 +1,22 @@
-// INSERT INTO bills (name, total_cost, group_id) VALUES
-// ('Dinner', 100.00, 1),
-// ('Groceries', 150.00, 2),
-// ('Office Supplies', 200.00, 3);
-
 import db from "#db/client";
 const sql = `
 INSERT INTO users (phone, password, first_name, last_name) VALUES
-('1234567890', 'password1', 'John', 'Doe'),
-('0987654321', 'password2', 'Jane', 'Smith'),
-('5555555555', 'password3', 'Alice', 'Johnson');
+('1234567891', 'password1', 'John', 'Doe'),
+('0987654322', 'password2', 'Jane', 'Smith'),
+('5555555556', 'password3', 'Alice', 'Johnson'),
+('7777777777', 'password4', 'Patrick', 'Maine');
 INSERT INTO groups (name) VALUES
-('Friends'),
-('Family'),
-('Colleagues');
+('Friend'),
+('Families'),
+('Colleague'),
+('other');
 INSERT INTO groups_users (group_id, user_id) VALUES
-(1, 1),
-(1, 2),
-(2, 1),
-(2, 3),             
-(3, 2),
-(3, 3);
+(1, 3),
+(1, 4),
+(2, 2),
+(2, 4),             
+(3, 1),
+(3, 4);
 INSERT INTO items (name, cost, group_id, payer_user_id) VALUES
 ('Pizza', 60.00, 1, 1),
 ('Drinks', 40.00, 1, 2),
@@ -52,12 +49,12 @@ await db.connect();
 
 async function seed() {}
 try {
-    await db.query(sql);
-    console.log("🌱 Database seeded.");
-  } catch (err) {
-    console.error("Seeding failed.");
-    console.error(err);
-  }
-  
+  await db.query(sql);
+  console.log("🌱 Database seeded.");
+} catch (err) {
+  console.error("Seeding failed.");
+  console.error(err);
+}
+
 await seed();
 await db.end();
