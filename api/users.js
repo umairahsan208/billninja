@@ -5,7 +5,7 @@ export default router;
 import {
   createUser,
   getUserByPhoneAndPassword,
-  deleteUser,
+  deleteUserById,
   getUserByPhone,
 } from "../db/queries/users.js";
 import { getFriendsByUserId, createFriend } from "../db/queries/friends.js";
@@ -38,7 +38,7 @@ router
 
 router.route("/deleteAccount").delete(requireUser, async (req, res) => {
   try {
-    await deleteUser(req.user.id);
+    await deleteUserById(req.user.id);
     res.status(204).send();
   } catch (error) {
     console.error(error);
