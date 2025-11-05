@@ -7,7 +7,6 @@ import db from "#db/client";
 // createItems
 // deleteItem
 
-
 // Get all items
 export async function getItems() {
   const sql = `SELECT id, name, cost, group_id, payer_user_id FROM items`;
@@ -17,7 +16,7 @@ export async function getItems() {
 
 // Get items by group id
 export async function getItemsByGroupId(groupId) {
-  const sql = `SELECT id, name, cost, group_id, payer_user_id FROM items WHERE bill_id = $1`;
+  const sql = `SELECT id, name, cost, group_id, payer_user_id FROM items WHERE group_id = $1`;
   const { rows: items } = await db.query(sql, [groupId]);
   return items;
 }

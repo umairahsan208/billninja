@@ -8,17 +8,20 @@ import requireBody from "../middleware/requireBody.js";
 import {
   getItemsByGroupId,
   getItemById,
-  createItems,
+  createItem,
   deleteItem,
 } from "../db/queries/items.js";
-import { createUserItem, payUserItem } from "../db/queries/users_items.js";
+import { createUserItem, payUserItem } from "../db/queries/items_users.js";
+import { getGroupUserByUserId } from "../db/queries/groups_users.js";
 
 router.use(requireUser);
 
 router
   .route("/")
   .get(async (req, res) => {
-    const items = await getItemsByGroupId(req.group.id);
+    const { groupId } = req.query;
+    if (!groupId) return res.status(400).send("groupId is required");
+    const items = await getItemsByGroupId(groupId);
     res.send(items);
   })
   .post(
@@ -26,14 +29,15 @@ router
     async (req, res) => {
       const { name, cost, groupId, payerUserId, owers } = req.body;
       try {
-        const groupUsers = await getGroupUserByUserId(req.group.id);
-        const item = await createItems({ name, cost, groupId, payerUserId });
+        const groupUsers = await getGroupUserByUserId(groupId);
+        const item = await createItem(name, cost, groupId, payerUserId);
         for (const userId of owers) {
           await createUserItem(userId, item.id);
         }
         res.status(201).send(item);
       } catch (error) {
         console.error(error);
+        res.status(500).send("Internal server error");
       }
     }
   );
@@ -55,9 +59,8 @@ router.route("/:id").delete(async (req, res) => {
 router.put("/:id/pay", async (req, res) => {
   try {
     await payUserItem(req.user.id, req.item.id);
-    res.status(200).send("Item Payed");
+    res.status(200).send("Item Paid");
   } catch (error) {
     console.error(error);
   }
 });
-//adding this message to fix

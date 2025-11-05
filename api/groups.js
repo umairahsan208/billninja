@@ -2,6 +2,7 @@ import express from "express";
 const router = express.Router();
 export default router;
 
+import requireUser from "../middleware/requireUser.js";
 import requireBody from "../middleware/requireBody.js";
 import { getUserByPhone } from "../db/queries/users.js";
 import {
@@ -14,6 +15,8 @@ import {
   createGroupUser,
   getGroupUserByUserId,
 } from "../db/queries/groups_users.js";
+
+router.use(requireUser);
 
 router
   .route("/")
@@ -31,9 +34,11 @@ router
           await createGroupUser(group.id, user.id);
         }
       }
-      res.status(201).send(group);
+      const members = await getGroupUserByUserId(group.id);
+      res.status(201).send(group, members);
     } catch (error) {
       console.error(error);
+      res.status(500).send("Internal server error");
     }
   });
 
@@ -48,7 +53,7 @@ router
   .route("/:id")
   .get(async (req, res) => {
     const members = await getGroupUserByUserId(req.group.id);
-    res.send({ members });
+    res.send({ group, members });
   })
   .delete(async (req, res) => {
     try {
@@ -56,5 +61,6 @@ router
       res.status(204).send();
     } catch (error) {
       console.error(error);
+      res.status(500).send("Internal server error");
     }
   });

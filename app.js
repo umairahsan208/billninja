@@ -2,18 +2,18 @@ import express from "express";
 const app = express();
 export default app;
 
-import getUserFromToken from "./middleware/getUserFromToken";
-import requireUser from "./middleware/requireUser";
+import getUserFromToken from "./middleware/getUserFromToken.js";
+import requireUser from "./middleware/requireUser.js";
 
-import usersRouter from "./api/users";
-import groupsRouter from "./api/groups";
-import billsRouter from "./api/bills";
-import itemsRouter from "./api/items";
+import usersRouter from "./api/users.js";
+import groupsRouter from "./api/groups.js";
+// import billsRouter from "./api/bills.js";
+import itemsRouter from "./api/items.js";
 
 app.use(express.json());
 app.use(getUserFromToken);
 
 app.use("/users", usersRouter);
 app.use("/groups", requireUser, groupsRouter);
-app.use("/bills", requireUser, billsRouter);
+// app.use("/bills", requireUser, billsRouter);
 app.use("/items", requireUser, itemsRouter);
