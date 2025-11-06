@@ -13,6 +13,7 @@ import {
 } from "../db/queries/items.js";
 import { createUserItem, payUserItem } from "../db/queries/items_users.js";
 import { getGroupUserByUserId } from "../db/queries/groups_users.js";
+import { getUserById } from "../db/queries/users.js";
 
 router.use(requireUser);
 
@@ -31,10 +32,13 @@ router
       try {
         const groupUsers = await getGroupUserByUserId(groupId);
         const item = await createItem(name, cost, groupId, payerUserId);
+        const owerInfo = [];
         for (const userId of owers) {
           await createUserItem(userId, item.id);
+          const user = await getUserById(userId);
+          if (user) owerInfo.push(user);
         }
-        res.status(201).send(item);
+        res.status(201).send({ item, owers: owerInfo });
       } catch (error) {
         console.error(error);
         res.status(500).send("Internal server error");

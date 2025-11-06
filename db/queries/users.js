@@ -16,13 +16,12 @@ export async function createUser(phone, password, first_name, last_name) {
     const {
       rows: [user],
     } = await db.query(sql, [phone, hashedPassword, first_name, last_name]);
-    return rows[0];
+    console.log("Created user:", user);
+    return user;
   } catch (error) {
     console.error("DB error in createduser:", error);
     throw error;
   }
-  // console.log("createUser result", user);
-  // return user;
 }
 
 //Get user by id
