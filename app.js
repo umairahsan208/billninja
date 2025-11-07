@@ -1,6 +1,7 @@
 import express from "express";
 const app = express();
 export default app;
+import cors from "cors";
 
 import getUserFromToken from "./middleware/getUserFromToken.js";
 import requireUser from "./middleware/requireUser.js";
@@ -13,6 +14,10 @@ import itemsRouter from "./api/items.js";
 app.use(express.json());
 app.use(getUserFromToken);
 
+let corsOptions = {
+  origin: ["http://localhost:5173"],
+};
+app.use(cors(corsOptions));
 app.use("/users", usersRouter);
 app.use("/groups", requireUser, groupsRouter);
 // app.use("/bills", requireUser, billsRouter);
