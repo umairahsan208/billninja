@@ -28,5 +28,5 @@ app.use(
 
 app.use("/users", usersRouter);
 app.use("/groups", requireUser, groupsRouter);
-// app.use("/bills", requireUser, billsRouter);
+// app.use("/bills", requireUser, billsRouter)
 app.use("/items", requireUser, itemsRouter);
