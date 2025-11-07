@@ -1,7 +1,7 @@
 import { createContext, useContext, useState } from "react";
 import { useAuth } from "../auth/AuthContext";
 
-export const API = "https://fsa-book-buddy-b6e748d1380d.herokuapp.com/api";
+export const API = import.meta.env.VITE_API;
 
 const ApiContext = createContext();
 

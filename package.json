@@ -9,6 +9,7 @@
   },
   "scripts": {
     "run": "node server.js",
+    "dev": "node --watch --env-file=.env server.js",
     "server": "node --watch server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "db:schema": "psql -d billninja -f db/schema.sql",
