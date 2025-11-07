@@ -2,17 +2,18 @@
   "name": "billninja",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "type": "module",
   "imports": {
     "#db/client": "./db/client.js"
   },
   "scripts": {
     "run": "node server.js",
+    "start": "node server.js",
     "dev": "node --watch --env-file=.env server.js",
     "server": "node --watch server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "db:schema": "psql -d billninja -f db/schema.sql",
+    "db:schema": "psql postgresql://billninja_user:KiwAWhJBi890urY3tbrQKbSFqY7owyaL@dpg-d46m2p2li9vc73atk2v0-a.virginia-postgres.render.com/billninja -f db/schema.sql",
     "db:seed": "node --env-file=.env db/seed.js",
     "db:reset": "npm run db:schema && npm run db:seed"
   },
