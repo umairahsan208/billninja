@@ -14,10 +14,18 @@ import itemsRouter from "./api/items.js";
 app.use(express.json());
 app.use(getUserFromToken);
 
-let corsOptions = {
-  origin: ["http://localhost:5173"],
-};
-app.use(cors(corsOptions));
+const allowedOrigins = [
+  "http://localhost:5173",
+  process.env.FRONTEND_URL,
+].filter(Boolean);
+
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  })
+);
+
 app.use("/users", usersRouter);
 app.use("/groups", requireUser, groupsRouter);
 // app.use("/bills", requireUser, billsRouter);
