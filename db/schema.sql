@@ -48,7 +48,7 @@ create table items(
     name TEXT NOT NULL,
     cost DECIMAL (10, 2) NOT NULL,
     group_id INTEGER NOT NULL REFERENCES groups(id) ON DELETE CASCADE,
-    payer_user_id INTEGER NOT NULL REFERENCES users(id)
+    payer_user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE
 );
 
 create table users_items(
