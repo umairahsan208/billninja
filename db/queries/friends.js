@@ -16,9 +16,10 @@ export async function createFriend(userId, friendId) {
 // Get all friends for a user
 export async function getFriendsByUserId(userId) {
   const sql = `
-  SELECT user_id, friend_id
+  SELECT users.id AS friend_id, phone, first_name, last_name
   FROM friends
-  WHERE friends.user_id = $1
+  JOIN users ON friend_id = users.id
+  WHERE user_id = $1
   `;
   const { rows: friends } = await db.query(sql, [userId]);
   return friends;
