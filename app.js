@@ -16,6 +16,8 @@ app.use(getUserFromToken);
 
 const allowedOrigins = [
   "http://localhost:5173",
+  "https://billninja.netlify.app",
+  "https://690fd7b056d7c200088fc430--billninja.netlify.app",
   process.env.FRONTEND_URL,
 ].filter(Boolean);
 
@@ -23,6 +25,7 @@ app.use(
   cors({
     origin: allowedOrigins,
     credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
