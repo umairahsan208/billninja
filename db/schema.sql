@@ -18,7 +18,7 @@ create table users(
 
 create table groups(
     id SERIAL PRIMARY KEY,
-    name TEXT UNIQUE NOT NULL,
+    name TEXT NOT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 

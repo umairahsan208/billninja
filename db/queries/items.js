@@ -16,7 +16,13 @@ export async function getItems() {
 
 // Get items by group id
 export async function getItemsByGroupId(groupId) {
-  const sql = `SELECT id, name, cost, group_id, payer_user_id FROM items WHERE group_id = $1`;
+  const sql = ` 
+  SELECT items.id, items.name, items.cost, items.group_id, items.payer_user_id, 
+  COALESCE(json_agg(users_items.user_id), '[]') AS owers 
+   FROM items 
+   LEFT JOIN users_items ON items.id = users_items.item_id 
+   WHERE items.group_id = $1 
+   GROUP BY items.id `;
   const { rows: items } = await db.query(sql, [groupId]);
   return items;
 }
