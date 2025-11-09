@@ -18,7 +18,6 @@ router
   .post(
     requireBody(["phone", "password", "first_name", "last_name"]),
     async (req, res) => {
-      console.log("req.body:", req.body);
       const { phone, password, first_name, last_name } = req.body;
       try {
         const user = await createUser(phone, password, first_name, last_name);
@@ -47,10 +46,10 @@ router
 
 router.route("/deleteAccount").delete(requireUser, async (req, res) => {
   try {
+    console.log("Deleting user:", req.user.id);
     await deleteUserById(req.user.id);
     res.status(204).send();
   } catch (error) {
-    console.error(error);
     res.status(500).send("Internal server error");
   }
 });

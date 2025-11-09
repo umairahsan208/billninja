@@ -16,7 +16,6 @@ export async function createUser(phone, password, first_name, last_name) {
     const {
       rows: [user],
     } = await db.query(sql, [phone, hashedPassword, first_name, last_name]);
-    console.log("Created user:", user);
     return user;
   } catch (error) {
     console.error("DB error in createduser:", error);
