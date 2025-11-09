@@ -35,7 +35,7 @@ router
         }
       }
       const members = await getGroupUserByUserId(group.id);
-      res.status(201).send(group, members);
+      res.status(201).send({ group, members });
     } catch (error) {
       console.error(error);
       res.status(500).send("Internal server error");
@@ -53,7 +53,7 @@ router
   .route("/:id")
   .get(async (req, res) => {
     const members = await getGroupUserByUserId(req.group.id);
-    res.send({ group, members });
+    res.send({ group: req.group, members });
   })
   .delete(async (req, res) => {
     try {

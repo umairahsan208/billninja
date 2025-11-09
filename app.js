@@ -1,18 +1,8 @@
 import express from "express";
-const app = express();
-export default app;
 import cors from "cors";
 
-import getUserFromToken from "./middleware/getUserFromToken.js";
-import requireUser from "./middleware/requireUser.js";
-
-import usersRouter from "./api/users.js";
-import groupsRouter from "./api/groups.js";
-// import billsRouter from "./api/bills.js";
-import itemsRouter from "./api/items.js";
-
-app.use(express.json());
-app.use(getUserFromToken);
+const app = express();
+export default app;
 
 const allowedOrigins = [
   "http://localhost:5173",
@@ -28,6 +18,17 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
+import getUserFromToken from "./middleware/getUserFromToken.js";
+import requireUser from "./middleware/requireUser.js";
+
+import usersRouter from "./api/users.js";
+import groupsRouter from "./api/groups.js";
+// import billsRouter from "./api/bills.js";
+import itemsRouter from "./api/items.js";
+
+app.use(express.json());
+app.use(getUserFromToken);
 
 app.use("/users", usersRouter);
 app.use("/groups", requireUser, groupsRouter);
